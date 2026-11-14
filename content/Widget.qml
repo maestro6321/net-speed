@@ -1,12 +1,8 @@
 pragma ComponentBehavior: Bound
+
 import QtQuick
 import Ryoku.PluginKit.Singletons
 
-// content/Widget.qml is the one view every host mounts (on the bar, this is the
-// glyph). It reads live state from the service through pluginApi.mainInstance.
-// The sidebar host sets open, reveal, tabActive, width, s and pluginApi; other
-// hosts set active, density and widthBudget as well. Read host values, never
-// assign them.
 Item {
     id: root
 
@@ -19,50 +15,74 @@ Item {
     property bool open: false
     property real reveal: 0
     property bool tabActive: false
+
     signal requestClose()
 
-    readonly property var service: pluginApi ? pluginApi.mainInstance : null
-    readonly property int count: service ? service.count : 0
+    readonly property var service:
+        pluginApi ? pluginApi.mainInstance : null
 
     implicitWidth: row.implicitWidth
-    implicitHeight: Math.max(row.implicitHeight, 18 * root.s)
+    implicitHeight: Math.max(row.implicitHeight, 22 * root.s)
 
     Row {
         id: row
-        anchors.verticalCenter: parent.verticalCenter
-        spacing: 6 * root.s
 
-        // The plugin's mark. Tint it with the themed accent so it follows the
-        // active palette (Theme resolves colour from the system scheme).
-        Text {
+        anchors.verticalCenter: parent.verticalCenter
+        spacing: 9 * root.s
+
+        Row {
+            spacing: 3 * root.s
             anchors.verticalCenter: parent.verticalCenter
-            text: "\u25C6"
-            color: (root.active || root.open) ? Theme.accent : Theme.dim
-            font.family: Theme.mono
-            font.pixelSize: 13 * root.s
+
+            Text {
+                text: "↓"
+                color: "#55D68B"
+                font.pixelSize: 15 * root.s
+                font.bold: true
+            }
+
+            Text {
+                text: root.service
+                    ? root.service.downloadText : "--"
+                color: Theme.bright
+                font.family: Theme.mono
+                font.pixelSize: 12 * root.s
+
+                width: 60 * root.s
+                horizontalAlignment: Text.AlignRight
+            }
         }
 
-        // The label beside the mark, elided to the width the host allows.
-        Text {
+        Row {
+            spacing: 3 * root.s
             anchors.verticalCenter: parent.verticalCenter
-            text: root.count
-            color: Theme.bright
-            font.family: Theme.font
-            font.pixelSize: 13 * root.s
-            elide: Text.ElideRight
-            width: root.widthBudget > 0 ? Math.min(implicitWidth, root.widthBudget) : implicitWidth
+
+            Text {
+                text: "↑"
+                color: "#62A9FF"
+                font.pixelSize: 15 * root.s
+                font.bold: true
+            }
+
+            Text {
+                text: root.service
+                    ? root.service.uploadText : "--"
+                color: Theme.bright
+                font.family: Theme.mono
+                font.pixelSize: 12 * root.s
+
+                width: 60 * root.s
+                horizontalAlignment: Text.AlignRight
+            }
         }
     }
 
     MouseArea {
         anchors.fill: parent
+
         onClicked: {
-            if (!root.pluginApi)
-                return;
-            if (root.open)
-                root.requestClose();
-            else if (root.pluginApi.togglePanel)
-                root.pluginApi.togglePanel();
+            if (root.pluginApi)
+                root.pluginApi.togglePanel()
         }
     }
 }
