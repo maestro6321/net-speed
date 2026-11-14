@@ -1,0 +1,45 @@
+{
+  "id": "net-speed",
+  "name": "Net Speed",
+  "version": "0.1.0",
+  "author": "master",
+  "description": "Net Speed is a Ryoku shell plugin.",
+  "license": "MIT",
+  "official": false,
+  "hosts": [
+    "topbarGlyph"
+  ],
+  "entryPoints": {
+    "main": "service/Main.qml",
+    "content": "content/Widget.qml",
+    "panel": "content/Panel.qml"
+  },
+  "panel": {
+    "width": 320
+  },
+  "files": [],
+  "capabilities": {
+    "densities": [
+      "glyph",
+      "compact"
+    ]
+  },
+  "defaults": {
+    "host": "topbarGlyph",
+    "label": "Net Speed"
+  },
+  "dependencies": {
+    "commands": []
+  },
+  "metadata": {
+    "settings": [
+      {
+        "key": "showCount",
+        "type": "toggle",
+        "label": "Show the tick count",
+        "group": "Net Speed",
+        "default": true
+      }
+    ]
+  }
+}
